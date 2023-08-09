@@ -1,0 +1,88 @@
+Recoil
+
+
+recoil은 react의 state를 관리해주는 라이브러리이며, react를 개발한 meta에서 만들었다.
+atom이라는 형태로 스테이트를 관리한다.
+
+맨 처음 터미널에서 라이브러리를 인스톨 한 후에,
+index.tsx 파일 내부 최상위 컴포넌트를 RecoilRoot 컴포넌트로 감싸준다.
+
+state 선언은 아래와 같이 한다. --- key값과 default값을 필요로 한다.
+
+export const toDoState = atom<IToDo[]>({
+    key: 'toDo',
+    default: [],
+});
+
+state의 값만 불러올 때에는 const state = useRecoilValue(state),
+state 변경함수만 불러올 때에는 const fn = setRecoilState(state),
+위의 두개를 모두 불러올 때에는 const [state, fn] = useRecoilState(state).
+
+recoil에는 selector라는 기능도 존재한다.
+selector는 앞서 선언한 atom 변수의 모양을 변경, 혹은 카테고리화할 때에 유용하다.
+이 기능도 역시 key를 가지며, get을 통해 사용하고자 하는 atom을 불러오는 것이 가능하다.
+
+export const toDoSelector = selector({
+    key: 'toDoSelector',
+    get: ({ get }) => {
+        const toDos = get(toDoState);
+        const category = get(categoryState);
+        return toDos.filter((a) => a.category === category);
+    },
+});
+
+
+
+/////////////////////////////////////////////////////////
+
+
+React Hook Form
+
+react-hook-form은 react로 개발할 때, form에 관련해 매우 유용한 기능을 쉽게 이용가능하게 만들어주는 라이브러리이다.
+
+맨 처음 터미널에서 라이브러리를 인스톨 한 후에 바로 사용가능하다.
+
+선언은 다음과 같이 한다.
+const { register, setValue, handleSubmit } = useForm<IForm>();
+
+register은 form 요소의 값을 다루는데 많은 기능을 관장한다.
+<input {...register('toDo', {required: 'Please Add To Do.',})} placeholder="Add to anything"/>
+위와같이 태그에서 사용할 키값을 지정, required, minLength, validation 등 수많은 기능이 있다.
+
+handleSubmit은 submit함수를 다룰 때 사용한다. 
+원래는 <form onSubmit={handleValid}></form> 이와같이 사용하지만,
+react-hook-form을 사용해 submit을 할 경우엔 <form onSubmit={handleSubmit(handleValid)}></form> 처럼 사용해야한다.
+이유는 handleSubmit 함수가 validation 검사를 한 후에 내부의 함수를 연산해주기 때문이다.
+
+그 외 formState : errors의 기능으로 에러 관리를 하는 등 매우 유용하고 많은 기능이 탑재해 있으니, 꼭 시간날때 복습하고, 더 공부해야겠다.
+
+
+
+////////////////////////////////////
+
+
+Code Challenge
+
+
+과제1 : toDo 아이템 내부에 해당 아이템을 삭제하는 기능을 가진 버튼 구현. (done)
+
+filter 함수를 통해 해당 컴포넌트에서 받은 id 프롭스와 같지 않은 함수들만 걸러 state 재구성
+
+과제2 : 데이터를 저장해서 새로고침에도 초기화되지 않는 상태로 구현하라. (done)
+
+recoil-persist 라이브러리를 사용.
+npm i recoil-persist 인스톨
+import { recoilPersist } from 'recoil-persist'; 불러오기
+const { persistAtom } = recoilPersist(); persist관련 객체 선언
+effects_UNSTABLE: [persistAtom], <-- 사용하고자하는 atom 내부에 추가
+
+과제3 : 유저가 커스텀 카테고리를 생성할수 있는 기능을 구현하라.
+
+-- 새로운 input을 만들어야함(react-hook-form이용).
+-- handleSubmit함수로 값을 받을것.
+
+-- 어떤 컴포넌트에 기능구현을 해야하지??
+
+-- category type은 TO_DO, DOING, DONE 세개로 한정되어있다. 새로운 카테고리를 어떻게 추가하지?
+
+-- 새롭게 만들어진 카테고리는 select 태그 내부에 option으로 들어가야하지 않을까?
