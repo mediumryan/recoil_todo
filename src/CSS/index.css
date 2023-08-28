@@ -1,1 +1,27 @@
 @import 'reset.css';
+
+:root {
+    /* color */
+    --primary-100: #0d6e6e;
+    --primary-200: #4a9d9c;
+    --primary-300: #afffff;
+    --accent-100: #ff3d3d;
+    --accent-200: #ffe0c8;
+    --text-100: #ffffff;
+    --text-200: #e0e0e0;
+    --bg-100: #0d1f2d;
+    --bg-200: #1d2e3d;
+    --bg-300: #354656;
+}
+
+@font-face {
+    font-family: 'GmarketSansMedium';
+    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff')
+        format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'GmarketSansMedium';
+}
