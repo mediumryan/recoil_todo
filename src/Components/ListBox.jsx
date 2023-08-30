@@ -2,18 +2,40 @@ import React from 'react';
 import { useRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 import { listItem } from '../atom';
+import { FaTrash } from 'react-icons/fa';
 
-const List = styled.ul``;
+const List = styled.ul`
+    margin-top: 32px;
+    padding: 24px;
+    border-radius: 10px;
+    width: 50%;
+    max-height: 50%;
+    overflow-y: scroll;
+    background-color: var(--bg-300);
+`;
 
-const ListItems = styled.li``;
+const ListItems = styled.li`
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--bg-200);
+    margin-bottom: 12px;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 20px;
+`;
 
 const ListStateButtons = styled.button`
-    color: tomato;
+    color: var(--accent-100);
+    transition: 300ms all;
+    &:hover {
+        color: var(--accent-200);
+    }
 `;
 
 export default function ListBox() {
     const [list, setList] = useRecoilState(listItem);
 
+    // 리스트 아이템 상태 토글링
     const toggleItemState = (itemState, itemId, itemText) => {
         const itemIndex = list.findIndex((a) => a.id === itemId);
         const newItem = { id: itemId, text: itemText, state: itemState };
@@ -24,7 +46,11 @@ export default function ListBox() {
         ]);
     };
 
-    console.log(list);
+    // 리스트 아이템 삭제
+    const deleteItem = (itemId) => {
+        const newList = list.filter((a) => a.id !== itemId);
+        setList(newList);
+    };
 
     return (
         <List>
@@ -32,41 +58,54 @@ export default function ListBox() {
                 return (
                     <ListItems key={item.id}>
                         <span>{item.text}</span>
-                        {item.state !== 'TO_DO' && (
+                        <div>
+                            {item.state !== 'TO_DO' && (
+                                <ListStateButtons
+                                    onClick={() => {
+                                        toggleItemState(
+                                            'TO_DO',
+                                            item.id,
+                                            item.text
+                                        );
+                                    }}
+                                >
+                                    TODO
+                                </ListStateButtons>
+                            )}
+                            {item.state !== 'DOING' && (
+                                <ListStateButtons
+                                    onClick={() => {
+                                        toggleItemState(
+                                            'DOING',
+                                            item.id,
+                                            item.text
+                                        );
+                                    }}
+                                >
+                                    DOING
+                                </ListStateButtons>
+                            )}
+                            {item.state !== 'DONE' && (
+                                <ListStateButtons
+                                    onClick={() => {
+                                        toggleItemState(
+                                            'DONE',
+                                            item.id,
+                                            item.text
+                                        );
+                                    }}
+                                >
+                                    DONE
+                                </ListStateButtons>
+                            )}
                             <ListStateButtons
                                 onClick={() => {
-                                    toggleItemState(
-                                        'TO_DO',
-                                        item.id,
-                                        item.text
-                                    );
+                                    deleteItem(item.id);
                                 }}
                             >
-                                TODO
+                                <FaTrash />
                             </ListStateButtons>
-                        )}
-                        {item.state !== 'DOING' && (
-                            <ListStateButtons
-                                onClick={() => {
-                                    toggleItemState(
-                                        'DOING',
-                                        item.id,
-                                        item.text
-                                    );
-                                }}
-                            >
-                                DOING
-                            </ListStateButtons>
-                        )}
-                        {item.state !== 'DONE' && (
-                            <ListStateButtons
-                                onClick={() => {
-                                    toggleItemState('DONE', item.id, item.text);
-                                }}
-                            >
-                                DONE
-                            </ListStateButtons>
-                        )}
+                        </div>
                     </ListItems>
                 );
             })}

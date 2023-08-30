@@ -16,7 +16,8 @@ const MainWrapper = styled.div`
 const Title = styled.h1`
     font-size: 48px;
     font-weight: 700;
-    margin: 64px 0 32px 0;
+    margin: 64px 0;
+    color: var(--primary-300);
 `;
 
 export default function App() {
