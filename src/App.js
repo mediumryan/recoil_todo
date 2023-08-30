@@ -2,6 +2,7 @@ import React from 'react';
 import { styled } from 'styled-components';
 import FormBox from './Components/FormBox';
 import ListBox from './Components/ListBox';
+import CategoryBox from './Components/CategoryBox';
 
 const MainWrapper = styled.div`
     height: 100vh;
@@ -25,6 +26,7 @@ export default function App() {
         <MainWrapper>
             <Title>Ryan ToDos</Title>
             <FormBox />
+            <CategoryBox />
             <ListBox />
         </MainWrapper>
     );
