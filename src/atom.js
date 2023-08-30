@@ -1,13 +1,18 @@
 import { atom, selector } from 'recoil';
+import { recoilPersist } from 'recoil-persist';
+
+const { persistAtom } = recoilPersist();
 
 export const listItem = atom({
     key: 'list-item',
     default: [],
+    effects_UNSTABLE: [persistAtom],
 });
 
 export const currentCategory = atom({
     key: 'current-category',
     default: 'TO_DO',
+    effects_UNSTABLE: [persistAtom],
 });
 
 export const listSelector = selector({
