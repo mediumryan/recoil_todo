@@ -1,48 +1,42 @@
-import React from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
-import { currentCategory } from '../atom';
+import { categories, currentCategory } from '../atom';
 
 const CategoryBtn = styled.button`
     color: var(--text-100);
     background-color: var(--bg-300);
-    margin: 24px;
-    padding: 24px;
-    font-size: 24px;
+    margin: 24px 12px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 22px;
+    transition: 300ms all;
 `;
 
 export default function CategoryBox() {
     const [cat, setCat] = useRecoilState(currentCategory);
+    const catArr = useRecoilValue(categories);
 
-    const toggleCategory = (val) => {
-        if (cat === val) {
+    const toggleCategory = (category) => {
+        if (cat === category) {
             return;
         }
-        setCat(val);
+        setCat(category);
     };
 
     return (
         <div>
-            <CategoryBtn
-                onClick={() => toggleCategory('TO_DO')}
-                style={{
-                    color: cat === 'TO_DO' ? '#ff3d3d' : '#fff',
-                }}
-            >
-                To Do
-            </CategoryBtn>
-            <CategoryBtn
-                onClick={() => toggleCategory('DOING')}
-                style={{ color: cat === 'DOING' ? '#ff3d3d' : '#fff' }}
-            >
-                Doing
-            </CategoryBtn>
-            <CategoryBtn
-                onClick={() => toggleCategory('DONE')}
-                style={{ color: cat === 'DONE' ? '#ff3d3d' : '#fff' }}
-            >
-                Done
-            </CategoryBtn>
+            {catArr.map((category) => {
+                return (
+                    <CategoryBtn
+                        onClick={() => toggleCategory(category)}
+                        style={{
+                            color: cat === category ? '#ff3d3d' : '#fff',
+                        }}
+                    >
+                        {category}
+                    </CategoryBtn>
+                );
+            })}
         </div>
     );
 }

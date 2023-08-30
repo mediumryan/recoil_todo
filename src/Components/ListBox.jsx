@@ -1,8 +1,9 @@
 import React from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { styled } from 'styled-components';
-import { listItem, listSelector } from '../atom';
+import { categories, listItem, listSelector } from '../atom';
 import { FaTrash } from 'react-icons/fa';
+import AddToCategory from './AddToCategory';
 
 const List = styled.ul`
     margin-top: 32px;
@@ -17,6 +18,7 @@ const List = styled.ul`
 const ListItems = styled.li`
     display: flex;
     justify-content: space-between;
+    align-items: center;
     background-color: var(--bg-200);
     margin-bottom: 12px;
     padding: 12px 24px;
@@ -35,6 +37,8 @@ const ListStateButtons = styled.button`
 export default function ListBox() {
     const [list, setList] = useRecoilState(listItem);
     const catList = useRecoilValue(listSelector);
+
+    const catArr = useRecoilValue(categories);
 
     // 리스트 아이템 상태 토글링
     const toggleItemState = (itemState, itemId, itemText) => {
@@ -61,46 +65,25 @@ export default function ListBox() {
                       return (
                           <ListItems key={item.id}>
                               <span>{item.text}</span>
+                              <AddToCategory />
                               <div>
-                                  {item.state !== 'TO_DO' && (
-                                      <ListStateButtons
-                                          onClick={() => {
-                                              toggleItemState(
-                                                  'TO_DO',
-                                                  item.id,
-                                                  item.text
-                                              );
-                                          }}
-                                      >
-                                          TODO
-                                      </ListStateButtons>
-                                  )}
-                                  {item.state !== 'DOING' && (
-                                      <ListStateButtons
-                                          onClick={() => {
-                                              toggleItemState(
-                                                  'DOING',
-                                                  item.id,
-                                                  item.text
-                                              );
-                                          }}
-                                      >
-                                          DOING
-                                      </ListStateButtons>
-                                  )}
-                                  {item.state !== 'DONE' && (
-                                      <ListStateButtons
-                                          onClick={() => {
-                                              toggleItemState(
-                                                  'DONE',
-                                                  item.id,
-                                                  item.text
-                                              );
-                                          }}
-                                      >
-                                          DONE
-                                      </ListStateButtons>
-                                  )}
+                                  {catArr.map((cat) => {
+                                      return (
+                                          item.state !== cat && (
+                                              <ListStateButtons
+                                                  onClick={() => {
+                                                      toggleItemState(
+                                                          cat,
+                                                          item.id,
+                                                          item.text
+                                                      );
+                                                  }}
+                                              >
+                                                  {cat}
+                                              </ListStateButtons>
+                                          )
+                                      );
+                                  })}
                                   <ListStateButtons
                                       onClick={() => {
                                           deleteItem(item.id);
